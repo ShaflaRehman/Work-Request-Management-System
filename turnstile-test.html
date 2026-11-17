@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Turnstile Login Test</title>
+
+    <script
+            src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+            async
+            defer>
+    </script>
+</head>
+
+<body>
+<h2>Turnstile CAPTCHA Test</h2>
+
+<p>Complete the CAPTCHA to generate a token.</p>
+
+<div
+        class="cf-turnstile"
+        data-sitekey="1x00000000000000000000AA"
+        data-callback="onCaptchaSuccess"
+        data-error-callback="onCaptchaError"
+        data-expired-callback="onCaptchaExpired">
+</div>
+
+<br>
+
+<button onclick="copyToken()">Copy Token</button>
+
+<p id="status">Waiting for CAPTCHA...</p>
+
+<textarea
+        id="token"
+        rows="6"
+        cols="70"
+        placeholder="Your CAPTCHA token will appear here"
+        readonly>
+    </textarea>
+
+<script>
+    function onCaptchaSuccess(token) {
+        document.getElementById("token").value = token;
+        document.getElementById("status").textContent =
+            "CAPTCHA completed successfully!";
+    }
+
+    function onCaptchaError(errorCode) {
+        document.getElementById("status").textContent =
+            "CAPTCHA error: " + errorCode;
+    }
+
+    function onCaptchaExpired() {
+        document.getElementById("token").value = "";
+        document.getElementById("status").textContent =
+            "Token expired. Complete CAPTCHA again.";
+    }
+
+    async function copyToken() {
+        const token = document.getElementById("token").value;
+
+        if (!token) {
+            alert("Complete CAPTCHA first.");
+            return;
+        }
+
+        await navigator.clipboard.writeText(token);
+        alert("Token copied!");
+    }
+</script>
+</body>
+</html>
